@@ -5,7 +5,8 @@
 	<license url="http://www.apache.org/licenses/LICENSE-2.0.html">Apache Software License 2.0</license>
 	<author url="http://konzertheld.de/">Christian Gredig</author>
 	<version>0.1</version>
-	<description><![CDATA[Blubb.]]></description>
-	<copyright>2011</copyright>
-	<url>http://konzertheld.de</url>
+	<description><![CDATA[
+	Adds a setting to posts to mark them as featured. Provides a "featured articles" block. Hooks up on theme function "jumplist".
+	]]></description>
+	<copyright>2011-2013</copyright>
 </pluggable>
