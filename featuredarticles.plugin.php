@@ -82,7 +82,7 @@ class FeaturedArticles extends Plugin
 		Stack::add('template_header_javascript', Site::get_url('scripts') . '/jquery.js', 'jquery');
 		Stack::add('template_header_javascript', $this->get_url(true) . 'featuredarticles.js', 'featuredarticles');
 		// Set the callback url
-		$url = "FeaturedArticles.url = '" . URL::get( 'ajax', array( 'context' => 'feature_article') ) . "';";
+		$url = "FeaturedArticles.url = '" . URL::get( 'auth_ajax', array( 'context' => 'feature_article') ) . "';";
 		Stack::add('template_header_javascript', $url, 'feature_article_url', 'featuredarticles');
 		// Set the plugin url which is needed to exchange the featured image
 		$pluginurl = "FeaturedArticles.pluginurl = '" . Site::get_url('user') . "/plugins/" . basename(dirname(__FILE__)) . "';";
@@ -92,7 +92,7 @@ class FeaturedArticles extends Plugin
 	/**
 	 * Check if an article is featured when requested via JS and invert it's feature status
 	 **/
-	public function action_ajax_feature_article($handler)
+	public function action_auth_ajax_feature_article($handler)
 	{
 		// Get the data that was sent
 		$id = $handler->handler_vars[ 'q' ];
