@@ -68,7 +68,7 @@ class FeaturedArticles extends Plugin
 		if(User::identify()->id)
 		{
 			$featureclass = ($post->info->featured)?"featured":"notfeatured";
-			return "<a id='feature$post->id' onclick='FeaturedArticles.feature($post->id);' class='$featureclass paginationicon'><img class='paginationicon' src='" . Site::get_url('user') . "/plugins/" . basename(dirname(__FILE__)) . "/$featureclass.png' id='featureimg$post->id' alt='$featureclass' title='$featureclass'></a>";
+			return "<a id='feature$post->id' onclick='FeaturedArticles.feature($post->id);' class='$featureclass paginationicon'><img class='paginationicon' src='" . $this->get_url("/$featureclass.png") . "' id='featureimg$post->id' alt='$featureclass' title='$featureclass'></a>";
 		}
 		return "";
 	}
@@ -85,7 +85,7 @@ class FeaturedArticles extends Plugin
 		$url = "FeaturedArticles.url = '" . URL::get( 'auth_ajax', array( 'context' => 'feature_article') ) . "';";
 		Stack::add('template_header_javascript', $url, 'feature_article_url', 'featuredarticles');
 		// Set the plugin url which is needed to exchange the featured image
-		$pluginurl = "FeaturedArticles.pluginurl = '" . Site::get_url('user') . "/plugins/" . basename(dirname(__FILE__)) . "';";
+		$pluginurl = "FeaturedArticles.pluginurl = '" . $this->get_url() . "';";
 		Stack::add('template_header_javascript', $pluginurl, 'feature_article_pluginurl', 'featuredarticles');
 	}
 	
