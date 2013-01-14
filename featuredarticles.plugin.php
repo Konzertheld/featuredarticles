@@ -96,8 +96,6 @@ class FeaturedArticles extends Plugin
 	{
 		// Get the data that was sent
 		$id = $handler->handler_vars[ 'q' ];
-		// Wipe anything else that's in the buffer
-		ob_end_clean();
 		// Do actual work
 		if(is_numeric($id))
 		{
@@ -107,7 +105,11 @@ class FeaturedArticles extends Plugin
 			else
 				$post->info->featured = true;
 			if($post->update(true))
+			{
+				// Wipe anything else that's in the buffer
+				ob_end_clean();
 				echo ($post->info->featured)?"featured":"notfeatured";
+			}
 		}
 	}
 }
