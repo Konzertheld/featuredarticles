@@ -8,5 +8,9 @@
 	<description><![CDATA[
 	Adds a setting to posts to mark them as featured. Provides a "featured articles" block. Hooks up on theme function "jumplist".
 	]]></description>
+	<provides>
+		<feature>block</feature>
+		<feature>featured</feature>
+	</provides>
 	<copyright>2011-2013</copyright>
 </pluggable>
