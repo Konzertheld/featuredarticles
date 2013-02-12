@@ -1,4 +1,5 @@
 <?php
+namespace Habari;
 /**
  * TODO: Rights management (token for featuring)
  * 
