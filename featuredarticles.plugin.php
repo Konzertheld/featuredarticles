@@ -84,5 +84,29 @@ class FeaturedArticles extends Plugin
 			}
 		}
 	}
+	
+	/*
+	 * Add checkbox to admin
+	 */
+	public function action_form_publish($form, $post, $context)
+	{
+		$form->settings->insert('comments_enabled', 'checkbox', 'featured', 'null:null', _t('Feature this post'), 'tabcontrol_checkbox');
+		if(isset($post->info->featured)) {
+			$form->settings->featured->value = $post->info->featured;
+		}
+	}
+	
+	/*
+	 * Save featured status from admin
+	 */
+	public function action_publish_post($post, $form)
+	{
+		if($form->settings->featured->value) {
+			$post->info->featured = true;
+		}
+		else {
+			unset($post->info->featured);
+		}
+	}
 }
 ?>
