@@ -1,11 +1,24 @@
 <?php
 namespace Habari;
-/**
- * TODO: Rights management (token for featuring)
- * 
- **/
+
 class FeaturedArticles extends Plugin
 {
+	/**
+	 * Create permission token
+	 **/
+	public function action_plugin_activation()
+	{
+		ACL::create_token('feature_content', 'Mark content as featured');
+	}
+	
+	/**
+	 * Remove permission token
+	 **/
+	public function action_plugin_deactivation()
+	{
+		ACL::destroy_token('feature_content');
+	}
+	 
 	/**
 	 * Register templates
 	 **/
@@ -37,8 +50,8 @@ class FeaturedArticles extends Plugin
 	 **/
 	public function theme_jumplist($theme, $post, $multiple = false)
 	{
-		if(User::identify()->id)
-		{
+		$user = User::identify();
+		if($user->can('feature_content')) {
 			$featureclass = ($post->info->featured)?"featured":"notfeatured";
 			return "<a id='feature$post->id' onclick='FeaturedArticles.feature($post->id);' class='$featureclass paginationicon'><img class='paginationicon' src='" . $this->get_url("/$featureclass.png") . "' id='featureimg$post->id' alt='$featureclass' title='$featureclass'></a>";
 		}
@@ -66,21 +79,24 @@ class FeaturedArticles extends Plugin
 	 **/
 	public function action_auth_ajax_feature_article($handler)
 	{
-		// Get the data that was sent
-		$id = $handler->handler_vars[ 'q' ];
-		// Do actual work
-		if(is_numeric($id))
-		{
-			$post = Post::get(array('id' => $id));
-			if($post->info->featured)
-				$post->info->featured = false;
-			else
-				$post->info->featured = true;
-			if($post->update(true))
+		$user = User::identify();
+		if($user->can('feature_content')) {
+			// Get the data that was sent
+			$id = $handler->handler_vars[ 'q' ];
+			// Do actual work
+			if(is_numeric($id))
 			{
-				// Wipe anything else that's in the buffer
-				ob_end_clean();
-				echo ($post->info->featured)?"featured":"notfeatured";
+				$post = Post::get(array('id' => $id));
+				if($post->info->featured)
+					$post->info->featured = false;
+				else
+					$post->info->featured = true;
+				if($post->update(true))
+				{
+					// Wipe anything else that's in the buffer
+					ob_end_clean();
+					echo ($post->info->featured)?"featured":"notfeatured";
+				}
 			}
 		}
 	}
@@ -90,9 +106,12 @@ class FeaturedArticles extends Plugin
 	 */
 	public function action_form_publish($form, $post, $context)
 	{
-		$form->settings->insert('comments_enabled', 'checkbox', 'featured', 'null:null', _t('Feature this post'), 'tabcontrol_checkbox');
-		if(isset($post->info->featured)) {
-			$form->settings->featured->value = $post->info->featured;
+		$user = User::identify();
+		if($user->can('feature_content')) {
+			$form->settings->insert('comments_enabled', 'checkbox', 'featured', 'null:null', _t('Feature this post'), 'tabcontrol_checkbox');
+			if(isset($post->info->featured)) {
+				$form->settings->featured->value = $post->info->featured;
+			}
 		}
 	}
 	
@@ -101,11 +120,14 @@ class FeaturedArticles extends Plugin
 	 */
 	public function action_publish_post($post, $form)
 	{
-		if($form->settings->featured->value) {
-			$post->info->featured = true;
-		}
-		else {
-			unset($post->info->featured);
+		$user = User::identify();
+		if($user->can('feature_content')) {
+			if($form->settings->featured->value) {
+				$post->info->featured = true;
+			}
+			else {
+				unset($post->info->featured);
+			}
 		}
 	}
 }
