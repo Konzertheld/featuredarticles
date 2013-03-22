@@ -7,15 +7,6 @@ namespace Habari;
 class FeaturedArticles extends Plugin
 {
 	/**
-	 * Add help text to plugin configuration page
-	 **/
-	public function help()
-	{
-		$help = "";
-		return $help;
-	}
-
-	/**
 	 * Register templates
 	 **/
 	public function action_init()
